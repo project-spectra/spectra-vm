@@ -6,6 +6,13 @@
 * QEMU, amd64, i686, most supported archs
 * qemu imgs can also be remotely built
 
+# VM Deploys
+
+OS | x86 (32) | AMD64
+------------ | -------------
+Linux | Y | Y
+Win | N | N
+OSX | N | N
+
 # Install
-* on linux install qemu
-* sh install.sh
+* linux x86 - installi32.sh
