@@ -8,4 +8,4 @@ qemu-img create debiani686.img 3G
 cd ..
 qemu-system-i386 -boot d -cdrom /iso/debian-9.9.0-i386-netinst.iso -hda /img/debiani686.img
 # install to disk then run
-# qemu-system-i386 debiani686.img 
+# qemu-system-i386 /img/debiani686.img 
