@@ -10,7 +10,7 @@
 
 OS | x86 (32) | AMD64
 ------------ | ------------- | ----
-Linux | Y | Y
+Linux | Y | N
 Win | N | N
 OSX | N | N
 
