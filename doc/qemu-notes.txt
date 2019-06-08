@@ -1,0 +1,24 @@
+Basic setup
+
+First of all, you need to create a file which will acts as an hard disk for the virtual machine:
+
+$ qemu-img create hd_img.img 500M
+
+You can then download an iso image of the installer, or create one yourself; you can then run a g-i session by running the following command:
+
+$ qemu -redir tcp:5555:10.0.2.15:80 -cdrom mini.iso -hda hd_img.img -boot d
+
+qemu-0.8.1 does not need any net options, it defaults to user-mode networking; with previous versions of qemu you might need to use "-net nic -net user" in order to get user-mode networking working.
+
+https://wiki.debian.org/DebianInstaller/Qemu
+
+https://wiki.debian.org/QEMU#Networking
+
+"Qemu monitor
+
+Qemu has a "monitor" (ctrl-alt-2) which can be used to access various funcionalities such as:
+
+    "screendump" which can be used to take a screenshot of the VM screen
+    "sendkey" is very useful when you want to switch to VT2 during a g-i vession ("sendkey ctrl-alt-f2)
+    "gdbserver" is useful for attaching gdb to a process running inside the VM
+    "loadmem/savemem" used to save/restore the state of the VM, saves you a lot of time when you have performed all the steps needed to reproduce a bug "
