@@ -1,11 +1,4 @@
-FROM debian:9.9
-
-# we need cmake with min version 3.10
-ADD https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5-Linux-x86_64.sh /cmake-3.14.5-Linux-x86_64.sh
-RUN mkdir /opt/cmake
-RUN sh /cmake-3.14.5-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
-RUN ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
-RUN cmake --version
+FROM i386/debian:9.9
 
 RUN echo "deb http://deb.debian.org/debian buster main" >> /etc/apt/sources.list
 RUN echo "deb-src http://deb.debian.org/debian buster main" >> /etc/apt/sources.list
@@ -18,6 +11,16 @@ RUN echo "deb-src http://security.debian.org/ buster/updates main contrib non-fr
 
 # install the packaging tools too because we need to build libarmadillo9 from buster repos
 RUN apt update && apt install -y build-essential packaging-dev debian-keyring devscripts equivs git wget
+
+# we need cmake with min version 3.10; cmake.org doesn't ship 32-bit cmake binaries since version 3.7.2 :/
+RUN mkdir /cmake_build
+ADD https://github.com/Kitware/CMake/releases/download/v3.14.5/cmake-3.14.5.tar.gz /cmake_build/cmake-3.14.5.tar.gz
+WORKDIR /cmake_build
+RUN tar -xf cmake-3.14.5.tar.gz
+WORKDIR /cmake_build/cmake-3.14.5
+RUN ./configure && make -j4 && make install
+
+WORKDIR /
 
 # install armadillo
 RUN mkdir libarmadillo9_build
