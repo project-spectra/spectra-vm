@@ -57,6 +57,6 @@ TBC
 ## TODO
 - 32-bit builds.
 - Add a script that allows switching between Debug or Release mode.
-- Do not bake the image into the repo - read it through a bind mount from the host.
+- Do not bake the src into the repo - read it through a bind mount from the host.
 - Choose static or dynamic linking.
 - Other distros (especially at least one with stack protection!)
