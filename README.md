@@ -8,7 +8,7 @@ Ensure you have docker installed.
 mkdir output
 # this bootstraps the docker image containing all the dependencies.
 # the git repo, without-amgif branch is baked into the image for now.
-docker build -t spectra_debian9.9_build_debug .
+docker build -t spectra_debian9.9_i386_build_debug .
 
 docker run -it --volume "$PWD/output:/glottal-inverse/bin" spectra_debian9.9_i386_build_debug:latest bash /glottal-inverse/build-docker-debian-99.sh
 ```
