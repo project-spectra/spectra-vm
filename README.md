@@ -10,7 +10,7 @@ mkdir output
 # the git repo, without-amgif branch is baked into the image for now.
 docker build -t spectra_debian9.9_build_debug .
 
-docker run -it --volume "$PWD/output:/glottal-inverse/bin" spectra_debian9.9_build_debug:latest bash /glottal-inverse/build-docker-debian-99.sh
+docker run -it --volume "$PWD/output:/glottal-inverse/bin" spectra_debian9.9_i386_build_debug:latest bash /glottal-inverse/build-docker-debian-99.sh
 ```
 The `gif.Linux` binary with all recursive dependencies should be present in the `output` folder on your host. Perhaps you may need to `sudo chown -R user:user output` where user is the name of your local user. To run the `gif.Linux` binary (overriding LD_LIBRARY_PATH is a must in order to use the binaries taken from the Debian image, or else you will encounter `error while loading shared libraries`):
 
