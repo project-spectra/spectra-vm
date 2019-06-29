@@ -29,7 +29,7 @@ Aborted (core dumped)
 ```
 Cause: Debian 9 is ancient; and one of the libraries is compiled without stack protection.
 
-Workaround: Delete all the other `.so` files besides `libpulsecommon-12.2.so` and `libpulse.so.0`. You will need to install the other libraries manually on your host. The resulting binary should run.
+Workaround: Delete all the other `.so` files besides `libpulsecommon-10.0.so` and `libpulse.so.0`. You will need to install the other libraries manually on your host. The resulting binary should run.
 
 ```
 $ readelf -d gif.Linux 
