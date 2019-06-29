@@ -29,14 +29,14 @@ Aborted (core dumped)
 ```
 Cause: Debian 9 is ancient; and one of the libraries is compiled without stack protection.
 
-Workaround: Delete all the other `.so` files besides `libpulsecommon-10.0.so` and `libpulse.so.0`. You will need to install the other libraries manually on your host. The resulting binary should run.
+Workaround: Delete all the other `.so` files besides `libpulsecommon-10.0.so`, `libpulse.so.0`, and perhaps `libgfortran.so.3`. You will need to install the other libraries manually on your host. The resulting binary should run.
 
 ```
 $ readelf -d gif.Linux 
 
-Dynamic section at offset 0x19cf640 contains 36 entries:
+Dynamic section at offset 0x1626e0 contains 36 entries:
   Tag        Type                         Name/Value
- 0x0000000000000001 (NEEDED)             Shared library: [libgfortran.so.5]
+ 0x0000000000000001 (NEEDED)             Shared library: [libgfortran.so.3]
  0x0000000000000001 (NEEDED)             Shared library: [libsoundio.so.1]
  0x0000000000000001 (NEEDED)             Shared library: [libpulse.so.0]
  0x0000000000000001 (NEEDED)             Shared library: [libportaudio.so.2]
@@ -47,7 +47,6 @@ Dynamic section at offset 0x19cf640 contains 36 entries:
  0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
  0x0000000000000001 (NEEDED)             Shared library: [ld-linux-x86-64.so.2]
  0x000000000000001d (RUNPATH)            Library runpath: [.]
-
 ```
 
 
