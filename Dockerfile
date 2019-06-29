@@ -9,6 +9,9 @@ RUN cmake --version
 
 RUN apt update && apt install -y build-essential git wget
 
+# should already install libsoundio1, install lapack at this stage so armadillo is built with blas/lapack support.
+RUN apt install -y libsoundio-dev libopenblas-dev liblapack-dev libpulse-dev portaudio19-dev libgfortran-6-dev
+
 # install armadillo
 RUN mkdir libarmadillo9_build
 ADD https://sources.voidlinux.org/armadillo-9.200.8/armadillo-9.200.8.tar.xz /libarmadillo9_build/armadillo-9.200.8.tar.xz
@@ -26,9 +29,6 @@ ADD disable-stack-protection.patch /glottal-inverse/
 RUN git apply disable-stack-protection.patch
 RUN mkdir bin
 RUN mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug
-
-# should already install libsoundio1
-RUN apt install -y libsoundio-dev libopenblas-dev libpulse-dev portaudio19-dev libgfortran-6-dev
 
 # WORKDIR /glottal-inverse/build
 # RUN make -j4
