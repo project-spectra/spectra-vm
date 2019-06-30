@@ -1,0 +1,104 @@
+cmake_minimum_required(VERSION 3.10)
+project(glottal-inverse)
+
+set(CMAKE_CXX_STANDARD 17)
+add_definitions("-pthread -fexceptions -Wall -Wextra -Wno-unused-parameter -Werror=implicit-function-declaration -pipe -fPIC -fstack-protector-strong")
+
+
+if(TARGET_ARCH MATCHES "^Android")
+
+    #SET(CMAKE_SYSROOT "/home/transfusion/Android/Sdk/ndk-bundle/platforms/android-24/arch-arm64")
+    #SET(CMAKE_C_FLAGS "-I/home/transfusion/Android/Sdk/ndk-bundle/android-toolchain/sysroot/usr/include -I/home/transfusion/Android/Sdk/ndk-bundle/android-toolchain/sysroot/usr/include/aarch64-linux-android -L/home/transfusion/android-toolchain-built/aarch64-linux-android-4.9/lib -L/home/transfusion/Android/Sdk/ndk-bundle/android-toolchain/sysroot/usr/lib -L/home/transfusion/Android/Sdk/ndk-bundle/android-toolchain/sysroot/usr/lib/aarch64-linux-android/24")
+
+    #SET(Open_BLAS_INCLUDE_SEARCH_PATHS
+    #    /home/transfusion/glottal-inverse/OpenBLAS/build/include
+    #)
+#
+    #SET(Open_BLAS_LIB_SEARCH_PATHS
+    #    /home/transfusion/glottal-inverse/OpenBLAS/build/lib
+    #)
+#
+    #FIND_PATH(OpenBLAS_INCLUDE_DIR NAMES cblas.h PATHS ${Open_BLAS_INCLUDE_SEARCH_PATHS})
+    #FIND_LIBRARY(OpenBLAS_LIB NAMES openblas PATHS ${Open_BLAS_LIB_SEARCH_PATHS})
+
+    #target_link_libraries( armadillo /home/transfusion/glottal-inverse/OpenBLAS/build/lib/libopenblas.so)
+endif()
+
+
+SET(OpenBLAS_FOUND ON)
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions("-O2 -Ofast -g")
+else()
+    add_definitions("-O3 -Os -Ofast")
+endif()
+
+if(NOT TARGET_ARCH)
+    set(TARGET_ARCH Linux)
+endif()
+
+include_directories(
+    ${PROJECT_SOURCE_DIR}/inc
+    ${PROJECT_SOURCE_DIR}/src
+)
+
+file(GLOB all_SRCS
+    "${PROJECT_SOURCE_DIR}/inc/*.h"
+    "${PROJECT_SOURCE_DIR}/src/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/audio/**/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/filter/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/window/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/pitch/*.cpp"
+    "${PROJECT_SOURCE_DIR}/src/gci_pd/*.cpp"
+)
+
+add_executable(gif ${all_SRCS})
+set_property(TARGET gif PROPERTY OUTPUT_NAME "${PROJECT_SOURCE_DIR}/bin/gif.${TARGET_ARCH}" )
+
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -pthread -Wl,-R .")
+
+# target_link_libraries(gif
+#   :libopenblas.a :liblapack.a
+#)
+
+if(TARGET_ARCH MATCHES "^Android")
+    add_definitions("-D__ANDROID__")
+
+    target_link_libraries(gif
+        $ENV{TOOLCHAIN_R19_GFORTRAN_ENABLED}/aarch64-linux-android/lib64/libgfortran.so
+        #libopenblas.a
+        #gomp
+        log
+        c++
+        OpenSLES
+        dl
+        oboe
+        armadillo
+    )
+
+    # set (OPENBLAS_DIR ./OpenBLAS)
+    set (ARMADILLO_DIR ./armadillo)
+    # set (LAPACK_DIR ./lapack)
+    set (OBOE_DIR ./oboe)
+
+    # DO NOT BUILD OPENBLAS OR LAPACK WITH CMAKE - LINK ARMADILLO DIRECTLY TO LIBOPENBLAS.A
+    # add_subdirectory(${OPENBLAS_DIR} ./OpenBLAS)
+    add_subdirectory(${ARMADILLO_DIR} ./armadillo)
+    # add_subdirectory(${LAPACK_DIR} ./lapack)
+    add_subdirectory(${OBOE_DIR} ./oboe)
+
+    include_directories(${OPENBLAS_DIR}/build/include)
+    include_directories(${ARMADILLO_DIR}/include)
+    # include_directories(${LAPACK_DIR}/LAPACKE/include)
+    include_directories(${OBOE_DIR}/include)
+else()
+    target_link_libraries(gif
+        stdc++fs
+        gfortran
+        soundio
+        pulse
+        portaudio
+        asound
+    )
+endif()
+
